@@ -15,13 +15,8 @@ jobs:
   deployment:
     runs-on: ubuntu-latest
     steps:
-      - uses: easingthemes/ssh-deploy@v5.0.0
-        name: Deploy over SSH
-        with:
-          SSH_PRIVATE_KEY: ${{ secrets.EC2_PASSWORD }}
-          REMOTE_HOST: ${{ vars.EC2_HOST }}
-          REMOTE_USER: ${{ vars.EC2_USERNAME }}
-          SCRIPT_AFTER: |
-            ./script
-            sudo docker build -t marketingapi GIT_REPO_LINK
-            sudo docker rm -f marketingapi https://github.com/fjensen21/marketingapi.git
+      - name: Deploy to EC2
+        run: |
+          ssh -i ${{secrets.EC2_PASSWORD}} ${{secrets.EC2_CONNECTION_STRING}}
+          sudo docker build -t marketingapi GIT_REPO_LINK
+          sudo docker rm -f marketingapi https://github.com/fjensen21/marketingapi.git
