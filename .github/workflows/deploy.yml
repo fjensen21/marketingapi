@@ -18,11 +18,11 @@ jobs:
 
     steps:
       - name: Build and Deploy
-        env:
-          PRIVATE_KEY: ${{ secrets.EC2_PASSWORD }}
-          CONNECTION_STRING: ${{ vars.EC2_CONNECTION_STRING }}
-        run: |
-          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ${CONNECTION_STRING}
-          sudo docker build -t marketingapi https://github.com/fjensen21/marketingapi.git
-          sudo docker rm -f marketingapi
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: $${{ secrets.EC2_PASSWORD }}
+          script: |
+            sudo docker build -t marketingapi https://github.com/fjensen21/marketingapi.git
+            sudo docker rm -f marketingapi
