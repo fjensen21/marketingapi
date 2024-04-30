@@ -22,7 +22,7 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          ssh -o "StrictHostKeyChecking=yes" -i ssh_key.pem ${{ vars.EC2_CONNECTION_STRING }}
+          ssh -o "StrictHostKeyChecking=no" -i ssh_key.pem ${{ vars.EC2_CONNECTION_STRING }}
           sudo docker build -t marketingapi https://github.com/fjensen21/marketingapi.git
           sudo docker rm -f marketingapi
 
