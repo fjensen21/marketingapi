@@ -23,6 +23,6 @@ jobs:
           CONNECTION_STRING: ${{ vars.EC2_CONNECTION_STRING }}
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ${CONNECTION_STRING}'
+          ssh -o StrictHostKeyChecking=no -i private_key ${CONNECTION_STRING}
           sudo docker build -t marketingapi https://github.com/fjensen21/marketingapi.git
           sudo docker rm -f marketingapi
