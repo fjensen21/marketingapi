@@ -17,6 +17,6 @@ jobs:
     steps:
       - name: Deploy to EC2
         run: |
-          ssh -i ${{secrets.EC2_PASSWORD}} ${{secrets.EC2_CONNECTION_STRING}}
+          ssh -i <(echo ${{secrets.EC2_PASSWORD}}) ${{secrets.EC2_CONNECTION_STRING}}
           sudo docker build -t marketingapi GIT_REPO_LINK
           sudo docker rm -f marketingapi https://github.com/fjensen21/marketingapi.git
