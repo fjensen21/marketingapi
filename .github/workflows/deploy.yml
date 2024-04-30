@@ -22,7 +22,7 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
-          key: $${{ secrets.EC2_PASSWORD }}
+          key: ${{ secrets.EC2_PASSWORD }}
           script: |
             sudo docker build -t marketingapi https://github.com/fjensen21/marketingapi.git
             sudo docker rm -f marketingapi
