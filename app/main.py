@@ -5,4 +5,4 @@ app = FastAPI()
 
 @app.get("/")
 def hello_world():
-    return "Hello to the world, time for an Action"
+    return "Hello to the world, deployed with action"
