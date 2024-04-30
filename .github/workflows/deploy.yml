@@ -13,20 +13,16 @@ on:
 
 jobs:
   deployment:
+    name: Deploy to EC2
     runs-on: ubuntu-latest
-    steps:
-      - name: Set up SSH key
-        run: |
-          echo "${{ secrets.EC2_PASSWORD }}" > ssh_key.pem
-          chmod 600 ssh_key.pem
-          echo "$(<ssh_key.pem)"
 
-      - name: Deploy to EC2
+    steps:
+      - name: Build and Deploy
+        env:
+          PRIVATE_KEY: ${{ secrets.EC2_PASSWORD }}
+          CONNECTION_STRING: ${{ vars.EC2_CONNECTION_STRING }}
         run: |
-          ssh -o "StrictHostKeyChecking=no" -i ssh_key.pem ${{ vars.EC2_CONNECTION_STRING }}
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${CONNECTION_STRING}'
           sudo docker build -t marketingapi https://github.com/fjensen21/marketingapi.git
           sudo docker rm -f marketingapi
-
-      - name: Clean up SSH key
-        run: |
-          rm ssh_key.pem
