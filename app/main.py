@@ -26,7 +26,7 @@ def hello_world():
     return "Hello to the world, deployed with action"
 
 
-@app.post("v1/upload/parseads")
+@app.post("/v1/upload/parseads")
 def parse_ads_from_file(
     file: UploadFile = File(...), config: ParseAdsConfig = Depends(checker)
 ):
