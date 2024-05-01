@@ -1,5 +1,6 @@
+from app.models import Ad
 from app.qa.ad_qa_system import AdQASystem, Failure
-from app.qa.checks import CheckAdName, ExpectedValues, PartialQAAd
+from app.qa.checks import CheckAdName, ExpectedValues
 
 
 def test_run_checks_with_single_check_and_failures():
@@ -7,7 +8,7 @@ def test_run_checks_with_single_check_and_failures():
     check = CheckAdName("ad1")
     qa_system.register_check(check)
     ads = [
-        PartialQAAd(
+        Ad(
             id=1,
             name="ad1",
             ad_set_id=1,
@@ -16,7 +17,7 @@ def test_run_checks_with_single_check_and_failures():
             website_url="example.com",
             cta="cta1",
         ),
-        PartialQAAd(
+        Ad(
             id=3,
             name="ad2",
             ad_set_id=1,
@@ -39,7 +40,7 @@ def test_run_checks_with_single_check_success():
     check = CheckAdName("ad1")
     qa_system.register_check(check)
     ads = [
-        PartialQAAd(
+        Ad(
             id=1,
             name="ad1",
             ad_set_id=1,
@@ -48,7 +49,7 @@ def test_run_checks_with_single_check_success():
             website_url="example.com",
             cta="cta1",
         ),
-        PartialQAAd(
+        Ad(
             id=2,
             name="ad1",
             ad_set_id=1,
@@ -64,7 +65,7 @@ def test_run_checks_with_single_check_success():
 
 
 def test_run_default_checks_with_all_failures():
-    ad = PartialQAAd(
+    ad = Ad(
         id=1,
         name="ad1",
         ad_set_id=1,
@@ -84,14 +85,14 @@ def test_run_default_checks_with_all_failures():
         "Ad name does not match expected ad name.",
         "CTA does not match expected CTA.",
         "Website URL does not match expected Website URL.",
-        "Ad not expected in campaign and ad set."
+        "Ad not expected in campaign and ad set.",
     ]
     expected = (False, [expected_failure])
     assert expected == result
 
 
 def test_run_default_checks_with_success():
-    ad = PartialQAAd(
+    ad = Ad(
         id=1,
         name="ad1",
         ad_set_id=1,

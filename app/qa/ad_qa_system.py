@@ -1,5 +1,6 @@
 from typing import List, Tuple, Union
 
+from app.models import Ad
 from app.qa.checks import (
     CheckAdName,
     CheckCTA,
@@ -7,12 +8,11 @@ from app.qa.checks import (
     CheckWebsiteURL,
     ExpectedValues,
     QACheckCallback,
-    PartialQAAd,
 )
 
 
 class Failure:
-    def __init__(self, ad: PartialQAAd):
+    def __init__(self, ad: Ad):
         self.ad = ad
         self.reasons = []
 
@@ -30,7 +30,7 @@ class AdQASystem:
     def __init__(self):
         self.checks: List[QACheckCallback] = []
 
-    def run_checks(self, ads: List[PartialQAAd]) -> Union[Pass, Fail]:
+    def run_checks(self, ads: List[Ad]) -> Union[Pass, Fail]:
         failures: List[Failure] = []
         for ad in ads:
             failure = Failure(ad)

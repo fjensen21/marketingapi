@@ -1,16 +1,16 @@
 import pytest
+from app.models import Ad
 from app.qa.checks import (
     CheckAdName,
     CheckCTA,
     CheckCorrectCampaignAndAdSet,
     CheckWebsiteURL,
-    PartialQAAd,
 )
 
 
 @pytest.fixture
 def default_ad_instance():
-    ad = PartialQAAd(
+    ad = Ad(
         id=1,
         name="ad1",
         ad_set_id=1,
@@ -77,4 +77,4 @@ def test_check_correct_campaign_and_ad_set_with_correct_campaign_ad_set(
 ):
     check = CheckCorrectCampaignAndAdSet({1: [1]})
     result = check.execute(default_ad_instance)
-    assert result == (True, None) 
+    assert result == (True, None)
