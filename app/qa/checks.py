@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Dict, List, NoReturn, Tuple, Union
+from typing import Any, Dict, List, NoReturn, Tuple, TypedDict, Union
 
 CheckResponse = Tuple[bool, Union[None, str]]
 
@@ -16,12 +16,19 @@ class ExpectedValues:
     ]  # dictionary of campaign ids and corresponding adset ids
 
 
+class DefaultChecks(TypedDict):
+    ad_name: bool
+    cta: bool
+    website_url: bool
+
+
 @dataclass
 class PartialQAAd:
     id: int
     name: str
     ad_set_id: int
     campaign_id: int
+    platform: str
     website_url: str
     cta: str
     extra_fields: Union[Dict[str, Any], None] = None
@@ -41,3 +48,36 @@ class CheckAdName(QACheckCallback):
             return True, None
 
         return False, "Ad name does not match expected ad name."
+
+
+class CheckCTA(QACheckCallback):
+    def __init__(self, expected_cta: str):
+        self.expected_cta = expected_cta
+
+    def execute(self, ad: PartialQAAd):
+        if ad.cta == self.expected_cta:
+            return True, None
+
+        return False, "CTA does not match expected CTA."
+
+
+class CheckWebsiteURL(QACheckCallback):
+    def __init__(self, expected_website_url: str):
+        self.expected_website_url = expected_website_url
+
+    def execute(self, ad: PartialQAAd):
+        if ad.website_url == self.expected_website_url:
+            return True, None
+
+        return False, "Website URL does not match expected Website URL."
+    
+class CheckCorrectCampaignAndAdSet(QACheckCallback):
+    def __init__(self, expected_campaign_structure: Dict[
+        int, List[int]
+    ]):
+        self.expected_campaign_structure = expected_campaign_structure
+    
+    def execute(self, ad: PartialQAAd):
+        if ad.campaign_id in self.expected_campaign_structure and ad.ad_set_id in self.expected_campaign_structure[ad.campaign_id]:
+            return True, None
+        return False, "Ad not expected in campaign and ad set."

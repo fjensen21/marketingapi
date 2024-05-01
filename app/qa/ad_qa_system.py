@@ -1,13 +1,25 @@
-from typing import Any, Dict, List, Tuple, Union
-from dataclasses import dataclass
+from typing import List, Tuple, Union
 
-from app.qa.checks import QACheckCallback, PartialQAAd
+from app.qa.checks import (
+    CheckAdName,
+    CheckCTA,
+    CheckCorrectCampaignAndAdSet,
+    CheckWebsiteURL,
+    ExpectedValues,
+    QACheckCallback,
+    PartialQAAd,
+)
 
 
 class Failure:
-    def __init__(self, ad: PartialQAAd, reasons: List[str] = []):
+    def __init__(self, ad: PartialQAAd):
         self.ad = ad
-        self.reasons = reasons
+        self.reasons = []
+
+    def __eq__(self, value: object) -> bool:
+        if isinstance(value, self.__class__):
+            return self.ad == value.ad and sorted(self.reasons) == sorted(value.reasons)
+        return False
 
 
 Pass = Tuple[bool, None]
@@ -15,10 +27,8 @@ Fail = Tuple[bool, List[Failure]]
 
 
 class AdQASystem:
-    def __init__(self, run_default_checks=True):
+    def __init__(self):
         self.checks: List[QACheckCallback] = []
-        if run_default_checks:
-            self.checks.append
 
     def run_checks(self, ads: List[PartialQAAd]) -> Union[Pass, Fail]:
         failures: List[Failure] = []
@@ -38,3 +48,23 @@ class AdQASystem:
 
     def register_check(self, check: QACheckCallback):
         self.checks.append(check)
+
+    def register_default_checks(
+        self,
+        expected_values: ExpectedValues,
+        check_cta=True,
+        check_ad_name=True,
+        check_website_url=True,
+        check_correct_campaign_and_ad_set=True,
+    ):
+        if check_ad_name:
+            self.register_check(CheckAdName(expected_values.ad_name))
+
+        if check_cta:
+            self.register_check(CheckCTA(expected_values.cta))
+
+        if check_website_url:
+            self.register_check(CheckWebsiteURL(expected_values.website_url))
+
+        if check_correct_campaign_and_ad_set:
+            self.register_check(CheckCorrectCampaignAndAdSet(expected_values.campaigns))
