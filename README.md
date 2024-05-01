@@ -30,6 +30,29 @@ Sample Config
 }
 ```
 
+**Thunder Client Generated Request Stub**
+
+```python
+import requests
+
+reqUrl = "https://marketingapi.finnjensen.io/v1/upload/parseads"
+
+post_files = {
+  "file": open("/path/to/csv/file.csv", "rb"),
+}
+headersList = {
+ "Accept": "*/*",
+ "User-Agent": "Thunder Client (https://www.thunderclient.com)",
+ "Content-Type": "multipart/form-data; boundary=kljmyvW1ndjXaOEAg4vPm6RBUqO6MC5A"
+}
+
+payload = "--kljmyvW1ndjXaOEAg4vPm6RBUqO6MC5A\r\nContent-Disposition: form-data; name=\"config\"\r\n\r\n{"retain_extra_fields": true}\r\n--kljmyvW1ndjXaOEAg4vPm6RBUqO6MC5A--\r\n"
+
+response = requests.request("POST", reqUrl, data=payload, files=post_files, headers=headersList)
+
+print(response.text)
+```
+
 **Responses**
 
 **Sample Success Response**
