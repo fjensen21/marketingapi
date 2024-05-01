@@ -12,7 +12,7 @@ Currently this API only supports CSV uploads.
 
 ### Endpoints
 
-#### POST /upload/parseads
+#### POST /v1/upload/parseads
 
 Used to parse out ads from a file. When a file is uploaded the file is turned into ad objects which are passed back as JSON. Currently this endpoint only supports CSV uploads.
 
