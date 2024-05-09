@@ -4,6 +4,36 @@ Open source api for common marketing tasks like ad builds and QAs
 
 # API
 
+## QA API
+
+### Ad Build
+
+Currently working on support for QAing ads built in platforms. Large scale advertisers often need to build the same ad across multiple campaigns. QA API provides an automated way to run QA checks against these ads after they are built. We provide a default set of checks such as matching expected CTA, Ad Name, Ad Location (ads built in the right campaigns and ad sets).
+
+You can also fork this reposititory and create custom checks that will run on every ad. CheckAdName is a custom check that is provided as a default check through the API endpoint. By adhering to the super class contract you can create your own checks that run against every ad through
+
+```python
+class QACheckCallback:
+    def execute(self, ad: Ad) -> Union[CheckResponse, NoReturn]:
+        raise NotImplementedError("Subclasses must implement execute function")
+
+
+class CheckAdName(QACheckCallback):
+    def __init__(self, expected_ad_name: str):
+        self.expected_ad_name = expected_ad_name
+
+    def execute(self, ad: Ad):
+        if ad.name == self.expected_ad_name:
+            return True, None
+
+        return False, "Ad name does not match expected ad name."
+
+# ads = a list of ads
+# ad_system = AdQASystem()
+# ad_system.register_check(CheckAdName("expectedAdName1"))
+# ad_system.run_checks(ads)
+```
+
 ## File Parse API
 
 Currently the File Parse API is used to get Ads from a file upload. This method can be used if you don't have API access to the platform you wish to upload ads from. You can also upload ads from a platform not supported by the PlatformAPI as long as you can adapt them to fit the required format for uploaded files.
