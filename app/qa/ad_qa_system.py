@@ -1,5 +1,7 @@
 from typing import List, Tuple, Union
 
+from pydantic import BaseModel
+
 from app.models import Ad
 from app.qa.checks import (
     CheckAdName,
@@ -11,7 +13,7 @@ from app.qa.checks import (
 )
 
 
-class Failure:
+class Failure(BaseModel):
     def __init__(self, ad: Ad):
         self.ad = ad
         self.reasons = []

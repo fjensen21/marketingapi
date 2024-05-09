@@ -5,7 +5,7 @@ from pydantic import BaseModel, ValidationError
 
 from app.fileparse.parse_ads import AdParser
 from app.models import Ad
-from app.qa.ad_qa_system import AdQASystem, Failure
+from app.qa.ad_qa_system import AdQASystem
 from app.qa.checks import ExpectedValues
 
 app = FastAPI()
@@ -46,9 +46,9 @@ def parse_ads_from_file(
         }
 
 
-class AdQAResponse(BaseModel):
-    passed: bool
-    failures: Optional[List[Failure]]
+class FailureResponse(BaseModel):
+    ad: Ad
+    reasons: List[str]
 
 
 @app.post("/v1/qa/ads")
@@ -56,4 +56,10 @@ def qa_ads(ads: List[Ad], expected_values: ExpectedValues):
     qa_system = AdQASystem()
     qa_system.register_default_checks(expected_values=expected_values)
     passed, failures = qa_system.run_checks(ads)
-    return {"passed": passed, "failures": failures}
+    if passed:
+        return {"passed": passed, "failures": failures}
+    else:
+        return {
+            "passed": passed,
+            "failures": map(lambda x: FailureResponse(ad=x.ad, reasons=x.reasons), failures),  # type: ignore
+        }
