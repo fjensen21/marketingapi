@@ -13,7 +13,7 @@ from app.qa.checks import (
 )
 
 
-class Failure(BaseModel):
+class Failure:
     def __init__(self, ad: Ad):
         self.ad = ad
         self.reasons = []
