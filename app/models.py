@@ -1,9 +1,9 @@
-from dataclasses import dataclass
 from typing import Any, Dict, Optional, Union
 
+from pydantic import BaseModel
 
-@dataclass
-class Ad:
+
+class Ad(BaseModel):
     id: int
     name: str
     ad_set_id: int
