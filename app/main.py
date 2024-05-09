@@ -61,5 +61,5 @@ def qa_ads(ads: List[Ad], expected_values: ExpectedValues):
     else:
         return {
             "passed": passed,
-            "failures": map(lambda x: FailureResponse(ad=x.ad, reasons=x.reasons), failures),  # type: ignore
+            "failures": map(lambda x: FailureResponse(ad=x.ad, reasons=[reason for reason in x.reasons]), failures),  # type: ignore
         }
