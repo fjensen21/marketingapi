@@ -27,3 +27,4 @@ jobs:
           script: |
             sudo docker build -t marketingapi https://github.com/fjensen21/marketingapi.git
             sudo docker rm -f marketingapi
+            sudo systemctl restart marketingapi.docker.service
