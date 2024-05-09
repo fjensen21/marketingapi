@@ -14,3 +14,13 @@ class Ad(BaseModel):
     ad_set_name: Optional[str] = None
     campaign_name: Optional[str] = None
     extra_fields: Union[Dict[str, Any], None] = None
+
+    def __hash__(self):
+        # Create a hash based on the id attribute
+        return hash(self.id)
+
+    def __eq__(self, other):
+        # Check equality based on the id attribute
+        if isinstance(other, self.__class__):
+            return self.id == other.id
+        return False
