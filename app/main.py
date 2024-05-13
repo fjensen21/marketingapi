@@ -2,6 +2,7 @@ from typing import List, Optional
 from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile, status
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel, ValidationError
+import uvicorn
 
 from app.fileparse.parse_ads import AdParser
 from app.models import Ad
@@ -46,9 +47,9 @@ def parse_ads_from_file(
         }
 
 
-class FailureResponse(BaseModel):
-    ad: Ad
-    reasons: List[str]
+# class FailureResponse(BaseModel):
+#     ad: Ad
+#     reasons: List[str]
 
 
 @app.post("/v1/qa/ads")
@@ -56,10 +57,15 @@ def qa_ads(ads: List[Ad], expected_values: ExpectedValues):
     qa_system = AdQASystem()
     qa_system.register_default_checks(expected_values=expected_values)
     passed, failures = qa_system.run_checks(ads)
-    if passed:
+
+    if not failures:
         return {"passed": passed, "failures": failures}
-    else:
-        return {
-            "passed": passed,
-            "failures": map(lambda x: FailureResponse(ad=x.ad, reasons=tuple([reason for reason in x.reasons])), failures),  # type: ignore
-        }
+
+    return {
+        "passed": passed,
+        "failures": failures,
+    }
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
