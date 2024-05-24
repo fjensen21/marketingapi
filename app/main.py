@@ -1,5 +1,6 @@
 from typing import List, Optional
 from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile, status
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel, ValidationError
 import uvicorn
@@ -10,6 +11,20 @@ from app.qa.ad_qa_system import AdQASystem
 from app.qa.checks import ExpectedValues
 
 app = FastAPI()
+
+
+origins = [
+    "http://localhost:3000",
+    "https://marketingtools.finnjensen.io",
+    "https://www.marketingtools.finnjensen.io",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 class ParseAdsConfig(BaseModel):
